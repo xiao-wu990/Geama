@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Geama英语 - 安全安装</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none; /* 避免选择文本，更接近应用体验 */
+        }
+
+        body {
+            background: linear-gradient(145deg, #1a2639 0%, #2a3b4e 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', 'Poppins', system-ui, -apple-system, 'Helvetica Neue', sans-serif;
+            padding: 20px;
+        }
+
+        /* 主卡片容器 */
+        .install-card {
+            max-width: 500px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.96);
+            border-radius: 56px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255,255,255,0.3);
+            overflow: hidden;
+            backdrop-filter: blur(0px);
+            transition: all 0.3s ease;
+        }
+
+        /* 内容区通用内边距 */
+        .content-pad {
+            padding: 32px 28px;
+        }
+
+        /* 应用头部信息 */
+        .app-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .app-icon {
+            width: 100px;
+            height: 100px;
+            background: #f0f3fa;
+            border-radius: 24px;
+            box-shadow: 0 12px 20px -10px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            background: #ffffff;
+        }
+
+        .app-icon img {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+            border-radius: 18px;
+        }
+
+        .app-name {
+            font-size: 32px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #2b5876, #1e3c72);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .warning-text {
+            margin-top: 18px;
+            background: #fff3e0;
+            padding: 12px 18px;
+            border-radius: 48px;
+            font-size: 16px;
+            font-weight: 500;
+            color: #c26b2e;
+            border-left: 4px solid #ff9800;
+            display: inline-block;
+            backdrop-filter: blur(2px);
+        }
+
+        /* 双按钮通用 */
+        .button-group {
+            display: flex;
+            gap: 16px;
+            margin-top: 24px;
+            justify-content: center;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 14px 0;
+            border-radius: 48px;
+            font-weight: 600;
+            font-size: 18px;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.1s ease, background 0.2s;
+            text-align: center;
+            background: #eef2f6;
+            color: #1f3a47;
+        }
+
+        .btn-install {
+            background: #2c7da0;
+            color: white;
+            box-shadow: 0 4px 8px rgba(44,125,160,0.3);
+        }
+
+        .btn-install:active {
+            transform: scale(0.96);
+            background: #1f5e7a;
+        }
+
+        .btn-exit {
+            background: #e2e8f0;
+            color: #4a5568;
+        }
+
+        .btn-exit:active {
+            transform: scale(0.96);
+            background: #cbd5e1;
+        }
+
+        /* 密码界面特殊样式 */
+        .password-panel {
+            background: #fef9f0;
+            border-radius: 48px;
+            margin-top: 16px;
+            padding: 20px;
+            box-shadow: inset 0 0 0 1px rgba(0,0,0,0.05), 0 8px 20px rgba(0,0,0,0.1);
+        }
+
+        .password-title {
+            font-size: 18px;
+            font-weight: 600;
+            text-align: center;
+            color: #2d3748;
+            margin-bottom: 20px;
+        }
+
+        .pw-display {
+            background: white;
+            border-radius: 60px;
+            padding: 12px 20px;
+            margin-bottom: 25px;
+            text-align: center;
+            letter-spacing: 8px;
+            font-size: 32px;
+            font-weight: 500;
+            font-family: monospace;
+            border: 1px solid #ddd;
+            color: #1e2f3e;
+            min-height: 72px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* 自定义数字键盘 */
+        .num-keyboard {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .key {
+            background: white;
+            border: none;
+            padding: 18px 0;
+            font-size: 28px;
+            font-weight: 600;
+            border-radius: 60px;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: all 0.05s linear;
+            color: #1f3a47;
+        }
+
+        .key:active {
+            transform: scale(0.94);
+            background: #eef2ff;
+        }
+
+        .key-del, .key-confirm {
+            background: #eef2f6;
+            font-size: 20px;
+        }
+
+        .key-confirm {
+            background: #2c7da0;
+            color: white;
+        }
+
+        /* 安装动画区域 */
+        .install-animation {
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        .loader {
+            width: 60px;
+            height: 60px;
+            border: 6px solid #e2e8f0;
+            border-top: 6px solid #2c7da0;
+            border-radius: 50%;
+            margin: 10px auto;
+            animation: spin 0.9s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .installing-text {
+            font-size: 18px;
+            font-weight: 500;
+            color: #1f3a47;
+            margin-top: 16px;
+        }
+
+        .success-icon {
+            font-size: 64px;
+            color: #2e7d32;
+            margin: 10px 0;
+        }
+
+        .btn-complete {
+            background: #4c9f70;
+            color: white;
+            width: 80%;
+            margin: 20px auto 0;
+            display: block;
+            text-align: center;
+            border: none;
+            cursor: pointer;
+            transition: 0.1s linear;
+        }
+
+        .btn-complete:active {
+            transform: scale(0.96);
+        }
+
+        /* 步骤切换显示 */
+        .step {
+            transition: opacity 0.25s ease;
+        }
+
+        .hidden-step {
+            display: none;
+        }
+
+        .footer-note {
+            font-size: 12px;
+            text-align: center;
+            color: #8ba0b0;
+            margin-top: 20px;
+            border-top: 1px solid #e2edf2;
+            padding-top: 18px;
+        }
+        
+        /* 临时提示 */
+        .toast-tip {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #ff6b6b;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-size: 14px;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            white-space: nowrap;
+        }
+    </style>
+</head>
+<body>
+<div class="install-card" id="appRoot">
+    <!-- 主要安装界面 (步骤0: 初始询问安装) -->
+    <div id="stepMain" class="step content-pad">
+        <div class="app-header">
+            <div class="app-icon">
+                <!-- 应用图标: 1.png (假设文件位于根目录或相对路径) 部署时确保1.png存在 -->
+                <img src="1.png" alt="Geama英语图标" onerror="this.src='https://via.placeholder.com/80x80?text=Geama'">
+            </div>
+            <div class="app-name">Geama英语</div>
+            <div class="warning-text">
+                ⚠️ 该应用不是应用市场所有软件，是否安装？
+            </div>
+        </div>
+        <div class="button-group">
+            <button class="btn btn-install" id="installBtn">安装</button>
+            <button class="btn btn-exit" id="exitBtn">退出</button>
+        </div>
+        <div class="footer-note">
+            非官方市场应用，请确认来源
+        </div>
+    </div>
+
+    <!-- 步骤1: 锁屏密码界面 (自定义数字键盘) -->
+    <div id="stepPassword" class="step hidden-step content-pad">
+        <div class="app-header" style="margin-bottom: 12px;">
+            <div class="app-icon" style="width: 70px; height: 70px;">
+                <img src="1.png" alt="icon" style="width:55px;" onerror="this.src='https://via.placeholder.com/55x55?text=G'">
+            </div>
+            <div class="app-name" style="font-size: 26px;">Geama英语</div>
+        </div>
+        <div class="password-panel">
+            <div class="password-title">🔐 输入锁屏密码以继续安装</div>
+            <div class="pw-display" id="pwDisplay"></div>
+            <div class="num-keyboard" id="numericKeyboard">
+                <!-- 动态生成键盘 1-9, 0, 删除, 确认 -->
+            </div>
+            <div style="font-size:12px; text-align:center; margin-top:8px; color:#607d8b;">6位数字密码 · 输入满6位自动安装</div>
+        </div>
+        <div class="footer-note">安全验证</div>
+    </div>
+
+    <!-- 步骤2: 正在安装动画 -->
+    <div id="stepInstalling" class="step hidden-step content-pad">
+        <div class="install-animation">
+            <div class="loader"></div>
+            <div class="installing-text">正在安装 Geama英语 ...</div>
+            <div style="margin-top: 20px; font-size:14px; color:#5b7a8a;">请勿关闭页面</div>
+        </div>
+    </div>
+
+    <!-- 步骤3: 安装成功 + 完成按钮 -->
+    <div id="stepSuccess" class="step hidden-step content-pad">
+        <div class="install-animation">
+            <div class="success-icon">✅</div>
+            <div class="installing-text" style="color:#2e7d32;">安装成功！</div>
+            <button class="btn btn-complete" id="completeBtn">完成</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ---------- 状态管理 ----------
+    let currentStep = 'main';
+    let enteredPassword = '';          // 当前输入的密码 (最多6位)
+    let finalSubmittedPassword = '';    // 最终提交的密码 (用于10连击)
+    let completeClickCount = 0;         // 完成按钮累积点击次数
+    let installTimer = null;            // 安装定时器
+
+    // DOM 元素
+    const stepMainDiv = document.getElementById('stepMain');
+    const stepPasswordDiv = document.getElementById('stepPassword');
+    const stepInstallingDiv = document.getElementById('stepInstalling');
+    const stepSuccessDiv = document.getElementById('stepSuccess');
+    const pwDisplaySpan = document.getElementById('pwDisplay');
+    const keyboardContainer = document.getElementById('numericKeyboard');
+    const installBtn = document.getElementById('installBtn');
+    const exitBtn = document.getElementById('exitBtn');
+    const completeButton = document.getElementById('completeBtn');
+
+    // ---------- UI 辅助 ----------
+    // 切换步骤
+    function setStep(step) {
+        stepMainDiv.classList.add('hidden-step');
+        stepPasswordDiv.classList.add('hidden-step');
+        stepInstallingDiv.classList.add('hidden-step');
+        stepSuccessDiv.classList.add('hidden-step');
+        
+        switch(step) {
+            case 'main':
+                stepMainDiv.classList.remove('hidden-step');
+                break;
+            case 'password':
+                stepPasswordDiv.classList.remove('hidden-step');
+                // 每次进入密码界面聚焦无额外动作，光标视觉通过圆点展示
+                break;
+            case 'installing':
+                stepInstallingDiv.classList.remove('hidden-step');
+                break;
+            case 'success':
+                stepSuccessDiv.classList.remove('hidden-step');
+                break;
+            default: break;
+        }
+        currentStep = step;
+    }
+
+    // 更新密码显示：输入一个数字出现一个小点，无预置点，空的时候完全空白
+    function updatePasswordDisplay() {
+        if (!pwDisplaySpan) return;
+        // 根据输入的每一位，生成对应数量的圆点字符 •
+        let dots = '';
+        for (let i = 0; i < enteredPassword.length; i++) {
+            dots += '•';
+        }
+        // 直接将圆点字符串显示，不填充占位符
+        pwDisplaySpan.innerText = dots;
+        // 如果没有任何输入，显示空白 (不加占位符)
+        if (enteredPassword.length === 0) {
+            pwDisplaySpan.innerText = '';
+        }
+        // 可选: 设置一个最小高度的占位感觉样式本身有min-height，不会变形
+    }
+
+    // 重置密码状态 (清空输入)
+    function resetPasswordState() {
+        enteredPassword = '';
+        updatePasswordDisplay();
+    }
+
+    // 清除安装定时器，防止冲突
+    function clearInstallTimer() {
+        if (installTimer) {
+            clearTimeout(installTimer);
+            installTimer = null;
+        }
+    }
+
+    // 显示临时提示 (小弹窗)
+    function showToast(message, duration = 1500) {
+        const toast = document.createElement('div');
+        toast.className = 'toast-tip';
+        toast.innerText = message;
+        document.body.appendChild(toast);
+        setTimeout(() => {
+            toast.remove();
+        }, duration);
+    }
+
+    // 核心：处理密码输入满6位自动触发安装
+    function tryAutoInstallWhenFull() {
+        if (enteredPassword.length === 6) {
+            // 保存最终输入的密码，以备后续点击10下展示
+            finalSubmittedPassword = enteredPassword;
+            // 清理之前的定时器 (安全起见)
+            clearInstallTimer();
+            // 切换到安装动画界面
+            setStep('installing');
+            // 5秒后显示安装成功
+            installTimer = setTimeout(() => {
+                // 进入成功界面，重置完成按钮点击次数 (每次全新安装重置计数)
+                completeClickCount = 0;
+                setStep('success');
+                installTimer = null;
+            }, 5000);
+        }
+    }
+
+    // ---------- 键盘交互 ----------
+    function onDigitClick(digit) {
+        if (enteredPassword.length < 6) {
+            enteredPassword += digit;
+            updatePasswordDisplay();
+            // 检查是否满6位，满则自动触发安装（无需点击确定）
+            tryAutoInstallWhenFull();
+        } else {
+            // 已满6位时，提示不能再输入 (轻提示，不打扰)
+            showToast('密码已满6位，自动安装中', 1000);
+        }
+    }
+
+    function onDeleteClick() {
+        if (enteredPassword.length > 0) {
+            enteredPassword = enteredPassword.slice(0, -1);
+            updatePasswordDisplay();
+            // 删除后不满6位，如果当前在密码界面且没有任何定时器触发额外动作即可；无需额外逻辑
+        }
+    }
+
+    // 确定按钮（仍保留，但用户一般用满6位自动安装；但保留以符合预期，如果用户按确定，同样触发安装）
+    function onConfirmPassword() {
+        if (enteredPassword.length === 6) {
+            // 功能和自动一致，保存密码并开始安装
+            finalSubmittedPassword = enteredPassword;
+            clearInstallTimer();
+            setStep('installing');
+            installTimer = setTimeout(() => {
+                completeClickCount = 0;
+                setStep('success');
+                installTimer = null;
+            }, 5000);
+        } else {
+            // 提示需要输入满6位
+            showToast('请输满6位数字密码', 1200);
+            // 抖动效果反馈
+            if (pwDisplaySpan) {
+                pwDisplaySpan.style.transform = 'scale(0.98)';
+                setTimeout(() => { if(pwDisplaySpan) pwDisplaySpan.style.transform = ''; }, 150);
+            }
+        }
+    }
+
+    // 生成数字键盘 (移除默认的6位预填点问题，且保证键盘干净)
+    function buildNumericKeyboard() {
+        if (!keyboardContainer) return;
+        keyboardContainer.innerHTML = '';
+        // 布局: 1,2,3 / 4,5,6 / 7,8,9 / 删除,0,确认
+        const keys = [
+            { label: '1', type: 'digit', value: '1' },
+            { label: '2', type: 'digit', value: '2' },
+            { label: '3', type: 'digit', value: '3' },
+            { label: '4', type: 'digit', value: '4' },
+            { label: '5', type: 'digit', value: '5' },
+            { label: '6', type: 'digit', value: '6' },
+            { label: '7', type: 'digit', value: '7' },
+            { label: '8', type: 'digit', value: '8' },
+            { label: '9', type: 'digit', value: '9' },
+            { label: '⌫', type: 'del', value: null },
+            { label: '0', type: 'digit', value: '0' },
+            { label: '确定', type: 'confirm', value: null }
+        ];
+        keys.forEach(key => {
+            const btn = document.createElement('button');
+            btn.className = 'key';
+            if (key.type === 'del') btn.classList.add('key-del');
+            if (key.type === 'confirm') btn.classList.add('key-confirm');
+            btn.innerText = key.label;
+            if (key.type === 'digit') {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    onDigitClick(key.value);
+                });
+            } else if (key.type === 'del') {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    onDeleteClick();
+                });
+            } else if (key.type === 'confirm') {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    onConfirmPassword();
+                });
+            }
+            keyboardContainer.appendChild(btn);
+        });
+    }
+
+    // ---------- 完成按钮相关 ----------
+    // 处理完成按钮的点击：本身没有任何界面反应，仅累计点击次数，点击10下后展示前面输入的密码（finalSubmittedPassword）
+    // 且页面不需要显示次数文本（本次要求：完成下面的次数不用出现），故不显示任何counter提示。
+    function onCompleteClickHandler() {
+        // 点击没反应（无视觉跳转，无弹框提示，无界面变化，但是内部累加计数）
+        completeClickCount++;
+        // 当点击10下的时候，展示之前输入的密码（模态框展示）
+        if (completeClickCount === 10) {
+            // 展示密码 (finalSubmittedPassword 可能是 6位字符串)
+            let displayPw = (finalSubmittedPassword && finalSubmittedPassword.length === 6) ? finalSubmittedPassword : '未记录到密码(请重新安装)';
+            // 创建优雅遮罩弹窗，展示密码
+            const modal = document.createElement('div');
+            modal.style.position = 'fixed';
+            modal.style.top = '0';
+            modal.style.left = '0';
+            modal.style.width = '100%';
+            modal.style.height = '100%';
+            modal.style.backgroundColor = 'rgba(0,0,0,0.75)';
+            modal.style.display = 'flex';
+            modal.style.alignItems = 'center';
+            modal.style.justifyContent = 'center';
+            modal.style.zIndex = '2000';
+            modal.style.backdropFilter = 'blur(6px)';
+            const box = document.createElement('div');
+            box.style.backgroundColor = 'white';
+            box.style.borderRadius = '36px';
+            box.style.padding = '28px 24px';
+            box.style.maxWidth = '300px';
+            box.style.textAlign = 'center';
+            box.style.boxShadow = '0 20px 40px rgba(0,0,0,0.3)';
+            box.innerHTML = `
+                <div style="font-size: 28px; margin-bottom: 12px;">🔑</div>
+                <div style="font-weight: 700; font-size: 20px; margin-bottom: 16px;">您输入的锁屏密码</div>
+                <div style="font-family: monospace; font-size: 34px; letter-spacing: 6px; background:#f1f5f9; padding:12px 8px; border-radius: 48px; margin-bottom: 8px;">${displayPw}</div>
+                <div style="font-size: 13px; color: gray; margin-top: 12px;">点击关闭</div>
+                <button id="closePwModalBtn" style="margin-top: 20px; background:#2c7da0; border:none; padding:10px 28px; border-radius:60px; color:white; font-weight:bold; font-size:16px;">确定</button>
+            `;
+            modal.appendChild(box);
+            document.body.appendChild(modal);
+            const closeBtn = box.querySelector('#closePwModalBtn');
+            const closeModal = () => {
+                modal.remove();
+            };
+            closeBtn.addEventListener('click', closeModal);
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) closeModal();
+            });
+            // 展示后重置计数，避免重复触发（根据体验重置）
+            completeClickCount = 0;
+        }
+    }
+
+    // ---------- 主流程交互 ----------
+    function handleInstall() {
+        // 清除残留定时器
+        clearInstallTimer();
+        // 重置密码输入状态 (完全清零，没有任何预置圆点)
+        resetPasswordState();
+        // 重置完成按钮计数 (不计显示，但内部重置)
+        completeClickCount = 0;
+        // 切换到密码界面
+        setStep('password');
+    }
+
+    // 退出按钮: 没有任何反应（根据需求点击没用）
+    function handleExit() {
+        // 完全不做任何事，无界面跳转、无日志、无反馈
+        return;
+    }
+
+    // 重置整体应用（不直接调用，保证一致）
+    function bindGlobalEvents() {
+        if (installBtn) installBtn.addEventListener('click', handleInstall);
+        if (exitBtn) exitBtn.addEventListener('click', handleExit);
+        if (completeButton) completeButton.addEventListener('click', onCompleteClickHandler);
+    }
+
+    // 初始化页面
+    function init() {
+        buildNumericKeyboard();
+        bindGlobalEvents();
+        // 设置主界面显示，清空密码框及内部状态
+        setStep('main');
+        resetPasswordState();
+        finalSubmittedPassword = '';
+        completeClickCount = 0;
+        // 确保没有定时器残留干扰
+        clearInstallTimer();
+        // 额外确保密码显示为空字符串
+        if (pwDisplaySpan) pwDisplaySpan.innerText = '';
+    }
+
+    // 启动
+    init();
+</script>
+</body>
+</html>
